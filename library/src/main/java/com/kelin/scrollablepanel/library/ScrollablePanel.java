@@ -11,6 +11,7 @@ import android.widget.FrameLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.io.Serializable;
 import java.util.HashSet;
 
 /**
@@ -85,6 +86,33 @@ public class ScrollablePanel extends FrameLayout {
         this.panelAdapter = panelAdapter;
         setUpFirstItemView(panelAdapter);
 
+    }
+
+    public class ScrollPosition implements Serializable {
+        public int position;
+        public int offset;
+    }
+
+    public ScrollPosition getHorizontalScrollPosition() {
+        ScrollPosition scrollPosition = new ScrollPosition();
+        LinearLayoutManager layoutManager = (LinearLayoutManager) headerRecyclerView.getLayoutManager();
+        scrollPosition.position = layoutManager.findFirstVisibleItemPosition();
+        View firstVisibleItem = layoutManager.getChildAt(0);
+        if (firstVisibleItem != null) {
+            scrollPosition.offset = layoutManager.getDecoratedLeft(firstVisibleItem);
+        }
+        return scrollPosition;
+    }
+
+    public void scrollToHorizontal(int position, int offset) {
+        LinearLayoutManager layoutManager = (LinearLayoutManager) headerRecyclerView.getLayoutManager();
+        layoutManager.scrollToPositionWithOffset(position, offset);
+        for (RecyclerView recyclerView : panelLineAdapter.getRecyclerViews()) {
+            layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
+            layoutManager.scrollToPositionWithOffset(position, offset);
+        }
+        panelLineAdapter.firstPos = position;
+        panelLineAdapter.firstOffset = offset;
     }
 
     /**
