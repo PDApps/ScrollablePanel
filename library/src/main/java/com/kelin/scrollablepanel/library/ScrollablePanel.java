@@ -274,8 +274,10 @@ public class ScrollablePanel extends FrameLayout {
                         PanelLineAdapter.this.firstOffset = firstLeft;
                     }
                     for (RecyclerView rv : observerList) {
-                        final LinearLayoutManager layoutManager = (LinearLayoutManager) rv.getLayoutManager();
-                        layoutManager.scrollToPositionWithOffset(PanelLineAdapter.this.firstPos, PanelLineAdapter.this.firstOffset);
+                        if (rv != recyclerView) {
+                            final LinearLayoutManager layoutManager = (LinearLayoutManager) rv.getLayoutManager();
+                            layoutManager.scrollToPositionWithOffset(PanelLineAdapter.this.firstPos, PanelLineAdapter.this.firstOffset);
+                        }
                     }
                 }
 
