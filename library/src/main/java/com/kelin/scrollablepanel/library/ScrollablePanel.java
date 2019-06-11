@@ -94,12 +94,24 @@ public class ScrollablePanel extends FrameLayout {
     }
 
     public ScrollPosition getHorizontalScrollPosition() {
+        return getScrollPosition(headerRecyclerView);
+    }
+
+    public ScrollPosition getVerticalScrollPosition() {
+        return getScrollPosition(recyclerView);
+    }
+
+    public ScrollPosition getScrollPosition(RecyclerView recyclerView) {
         ScrollPosition scrollPosition = new ScrollPosition();
-        LinearLayoutManager layoutManager = (LinearLayoutManager) headerRecyclerView.getLayoutManager();
+        LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
         scrollPosition.position = layoutManager.findFirstVisibleItemPosition();
         View firstVisibleItem = layoutManager.getChildAt(0);
         if (firstVisibleItem != null) {
-            scrollPosition.offset = layoutManager.getDecoratedLeft(firstVisibleItem);
+            if (recyclerView == headerRecyclerView) {
+                scrollPosition.offset = layoutManager.getDecoratedLeft(firstVisibleItem);
+            } else {
+                scrollPosition.offset = layoutManager.getDecoratedTop(firstVisibleItem);
+            }
         }
         return scrollPosition;
     }
@@ -113,6 +125,11 @@ public class ScrollablePanel extends FrameLayout {
         }
         panelLineAdapter.firstPos = position;
         panelLineAdapter.firstOffset = offset;
+    }
+
+    public void scrollToVertical(int position, int offset) {
+        LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
+        layoutManager.scrollToPositionWithOffset(position, offset);
     }
 
     /**
