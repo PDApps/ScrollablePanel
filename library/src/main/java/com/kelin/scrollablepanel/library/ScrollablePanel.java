@@ -236,6 +236,8 @@ public class ScrollablePanel extends FrameLayout {
                 panelAdapter.onBindViewHolder(holder.firstColumnItemVH, position + 1, 0);
             }
 
+            LinearLayoutManager layoutManager = (LinearLayoutManager) holder.recyclerView.getLayoutManager();
+            layoutManager.scrollToPositionWithOffset(PanelLineAdapter.this.firstPos, PanelLineAdapter.this.firstOffset);
         }
 
 
@@ -258,10 +260,6 @@ public class ScrollablePanel extends FrameLayout {
 
         public void initRecyclerView(RecyclerView recyclerView) {
             recyclerView.setHasFixedSize(true);
-            LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
-            if (layoutManager != null && firstPos > 0 && firstOffset > 0) {
-                layoutManager.scrollToPositionWithOffset(PanelLineAdapter.this.firstPos, PanelLineAdapter.this.firstOffset);
-            }
             observerList.add(recyclerView);
             recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
                 @Override
@@ -270,18 +268,14 @@ public class ScrollablePanel extends FrameLayout {
                     LinearLayoutManager linearLayoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
                     int firstPos = linearLayoutManager.findFirstVisibleItemPosition();
                     View firstVisibleItem = linearLayoutManager.getChildAt(0);
-                    if (firstVisibleItem != null) {
-                        int firstLeft = linearLayoutManager.getDecoratedLeft(firstVisibleItem);
-                        for (RecyclerView rv : observerList) {
-                            if (recyclerView != rv) {
-                                LinearLayoutManager layoutManager = (LinearLayoutManager) rv.getLayoutManager();
-                                if (layoutManager != null) {
-                                    PanelLineAdapter.this.firstPos = firstPos;
-                                    PanelLineAdapter.this.firstOffset = firstLeft;
-                                    layoutManager.scrollToPositionWithOffset(firstPos, firstLeft);
-                                }
-                            }
-                        }
+                    int firstLeft = linearLayoutManager.getDecoratedLeft(firstVisibleItem);
+                    if (dx != 0) {
+                        PanelLineAdapter.this.firstPos = firstPos;
+                        PanelLineAdapter.this.firstOffset = firstLeft;
+                    }
+                    for (RecyclerView rv : observerList) {
+                        final LinearLayoutManager layoutManager = (LinearLayoutManager) rv.getLayoutManager();
+                        layoutManager.scrollToPositionWithOffset(PanelLineAdapter.this.firstPos, PanelLineAdapter.this.firstOffset);
                     }
                 }
 
