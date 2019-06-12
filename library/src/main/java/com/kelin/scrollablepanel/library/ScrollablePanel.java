@@ -44,10 +44,10 @@ public class ScrollablePanel extends FrameLayout {
     private void initView() {
         LayoutInflater.from(getContext()).inflate(R.layout.view_scrollable_panel, this, true);
         recyclerView = (RecyclerView) findViewById(R.id.recycler_content_list);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false));
         firstItemView = (FrameLayout) findViewById(R.id.first_item);
         headerRecyclerView = (RecyclerView) findViewById(R.id.recycler_header_list);
-        headerRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
+        headerRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), RecyclerView.HORIZONTAL, false));
         headerRecyclerView.setHasFixedSize(true);
         if (panelAdapter != null) {
             panelLineAdapter = new PanelLineAdapter(panelAdapter, recyclerView, headerRecyclerView);
