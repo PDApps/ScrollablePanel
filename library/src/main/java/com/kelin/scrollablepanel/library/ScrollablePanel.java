@@ -237,7 +237,7 @@ public class ScrollablePanel extends FrameLayout {
             }
 
             LinearLayoutManager layoutManager = (LinearLayoutManager) holder.recyclerView.getLayoutManager();
-            layoutManager.scrollToPositionWithOffset(PanelLineAdapter.this.firstPos, PanelLineAdapter.this.firstOffset);
+            layoutManager.scrollToPositionWithOffset(firstPos, firstOffset);
         }
 
 
@@ -268,17 +268,17 @@ public class ScrollablePanel extends FrameLayout {
                 public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                     super.onScrolled(recyclerView, dx, dy);
                     LinearLayoutManager linearLayoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
-                    int firstPos = linearLayoutManager.findFirstVisibleItemPosition();
+                    int position = linearLayoutManager.findFirstVisibleItemPosition();
                     View firstVisibleItem = linearLayoutManager.getChildAt(0);
                     int firstLeft = linearLayoutManager.getDecoratedLeft(firstVisibleItem);
                     if (dx != 0) {
-                        PanelLineAdapter.this.firstPos = firstPos;
-                        PanelLineAdapter.this.firstOffset = firstLeft;
+                        firstPos = position;
+                        firstOffset = firstLeft;
                     }
                     for (RecyclerView rv : observerList) {
                         if (rv != recyclerView) {
                             final LinearLayoutManager layoutManager = (LinearLayoutManager) rv.getLayoutManager();
-                            layoutManager.scrollToPositionWithOffset(PanelLineAdapter.this.firstPos, PanelLineAdapter.this.firstOffset);
+                            layoutManager.scrollToPositionWithOffset(firstPos, firstOffset);
                         }
                     }
                 }
