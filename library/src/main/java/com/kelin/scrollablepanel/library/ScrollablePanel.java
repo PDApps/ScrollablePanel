@@ -255,6 +255,8 @@ public class ScrollablePanel extends FrameLayout {
                 } else {
                     headerRecyclerView.getAdapter().notifyDataSetChanged();
                 }
+                LinearLayoutManager layoutManager = (LinearLayoutManager) headerRecyclerView.getLayoutManager();
+                layoutManager.scrollToPositionWithOffset(firstPos, firstOffset);
             }
         }
 
