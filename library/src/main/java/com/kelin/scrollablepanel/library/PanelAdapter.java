@@ -48,6 +48,14 @@ public abstract class PanelAdapter {
         return 0;
     }
 
+    public boolean isEmptyRow(int row) {
+        return false;
+    }
+
+    public boolean isEmptyColumn(int column) {
+        return false;
+    }
+
     /**
      * see {@link RecyclerView.Adapter#onBindViewHolder(RecyclerView.ViewHolder, int)}  }
      *
