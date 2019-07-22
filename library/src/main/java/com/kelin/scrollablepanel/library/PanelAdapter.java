@@ -56,6 +56,12 @@ public abstract class PanelAdapter {
         return false;
     }
 
+    public abstract int getWidthOfColumn();
+
+    public abstract int getHeightOfRow();
+
+    public abstract int getWidthOfFirstHeader();
+
     /**
      * see {@link RecyclerView.Adapter#onBindViewHolder(RecyclerView.ViewHolder, int)}  }
      *

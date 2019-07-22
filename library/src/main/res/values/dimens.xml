@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="line_width">1dp</dimen>
+    <dimen name="dash_length">5dp</dimen>
+    <dimen name="divider_gap_vert">5dp</dimen>
+</resources>
