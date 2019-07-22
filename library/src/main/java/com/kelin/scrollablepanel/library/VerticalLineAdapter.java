@@ -37,7 +37,7 @@ public class VerticalLineAdapter extends RecyclerView.Adapter<VerticalLineAdapte
 
     @Override
     public int getItemCount() {
-        return panelAdapter.getColumnCount();
+        return panelAdapter.getColumnCount() - 1;
     }
 
     static class LineViewHolder extends RecyclerView.ViewHolder {
