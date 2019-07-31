@@ -7,7 +7,10 @@ import android.graphics.Canvas;
 import android.graphics.DashPathEffect;
 import android.graphics.Paint;
 import android.util.AttributeSet;
+import android.util.TypedValue;
 import android.view.View;
+
+import androidx.annotation.ColorInt;
 
 import static android.os.Build.VERSION;
 import static android.os.Build.VERSION_CODES;
@@ -55,11 +58,13 @@ public class DottedLine extends View {
 
     private void init() {
         Resources res = getResources();
+        int lineColor = getLineColor();
         float lineWidth = res.getDimension(R.dimen.line_width);
         mDashedPaint = new Paint();
         mDashedPaint.setStrokeWidth(lineWidth);
         float dashLength = res.getDimension(R.dimen.dash_length);
         mDashedPaint.setPathEffect(new DashPathEffect(new float[]{dashLength, dashLength}, 0));
+        mDashedPaint.setColor(lineColor);
 
         // If we don't render in software mode, the dotted line becomes a solid line.
         if (VERSION.SDK_INT >= VERSION_CODES.HONEYCOMB) {
@@ -68,6 +73,16 @@ public class DottedLine extends View {
 
         mSolidPaint = new Paint();
         mSolidPaint.setStrokeWidth(lineWidth);
+        mSolidPaint.setColor(lineColor);
+    }
+
+    private @ColorInt
+    int getLineColor() {
+        TypedValue typedValue = new TypedValue();
+        Resources.Theme theme = getContext().getTheme();
+        theme.resolveAttribute(R.attr.lineColor, typedValue, true);
+        @ColorInt int color = typedValue.data;
+        return color;
     }
 
     @Override
