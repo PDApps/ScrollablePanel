@@ -20,6 +20,7 @@ import java.util.HashSet;
 public class ScrollablePanel extends FrameLayout {
     protected RecyclerView recyclerView;
     protected RecyclerView headerRecyclerView;
+    protected RecyclerView verticalLinesRecyclerView;
     protected PanelLineAdapter panelLineAdapter;
     protected PanelAdapter panelAdapter;
     protected FrameLayout firstItemView;
@@ -49,10 +50,15 @@ public class ScrollablePanel extends FrameLayout {
         headerRecyclerView = (RecyclerView) findViewById(R.id.recycler_header_list);
         headerRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), RecyclerView.HORIZONTAL, false));
         headerRecyclerView.setHasFixedSize(true);
+        verticalLinesRecyclerView = findViewById(R.id.vertical_lines_recycler);
+        verticalLinesRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), RecyclerView.HORIZONTAL, false));
+        verticalLinesRecyclerView.setHasFixedSize(true);
         if (panelAdapter != null) {
-            panelLineAdapter = new PanelLineAdapter(panelAdapter, recyclerView, headerRecyclerView);
+            panelLineAdapter = new PanelLineAdapter(panelAdapter, recyclerView, headerRecyclerView, verticalLinesRecyclerView);
             recyclerView.setAdapter(panelLineAdapter);
             setUpFirstItemView(panelAdapter);
+            MarginLayoutParams marginLayoutParams = (MarginLayoutParams) verticalLinesRecyclerView.getLayoutParams();
+            marginLayoutParams.leftMargin = panelAdapter.getWidthOfFirstHeader();
         }
     }
 
@@ -79,11 +85,13 @@ public class ScrollablePanel extends FrameLayout {
             panelLineAdapter.setPanelAdapter(panelAdapter);
             panelLineAdapter.notifyDataSetChanged();
         } else {
-            panelLineAdapter = new PanelLineAdapter(panelAdapter, recyclerView, headerRecyclerView);
+            panelLineAdapter = new PanelLineAdapter(panelAdapter, recyclerView, headerRecyclerView, verticalLinesRecyclerView);
             recyclerView.setAdapter(panelLineAdapter);
         }
         this.panelAdapter = panelAdapter;
         setUpFirstItemView(panelAdapter);
+        MarginLayoutParams marginLayoutParams = (MarginLayoutParams) verticalLinesRecyclerView.getLayoutParams();
+        marginLayoutParams.leftMargin = panelAdapter.getWidthOfFirstHeader();
 
     }
 
@@ -179,19 +187,21 @@ public class ScrollablePanel extends FrameLayout {
 
         private PanelAdapter panelAdapter;
         private RecyclerView headerRecyclerView;
+        private RecyclerView verticalLinesRecyclerView;
         private RecyclerView contentRV;
         private HashSet<RecyclerView> observerList = new HashSet<>();
         private int firstPos = -1;
         private int firstOffset = -1;
 
 
-        public PanelLineAdapter(PanelAdapter panelAdapter, RecyclerView contentRV, RecyclerView headerRecyclerView) {
+        public PanelLineAdapter(PanelAdapter panelAdapter, RecyclerView contentRV, RecyclerView headerRecyclerView, RecyclerView verticalLinesRecyclerView) {
             this.panelAdapter = panelAdapter;
             this.headerRecyclerView = headerRecyclerView;
+            this.verticalLinesRecyclerView = verticalLinesRecyclerView;
             this.contentRV = contentRV;
             initRecyclerView(headerRecyclerView);
+            initRecyclerView(verticalLinesRecyclerView);
             setUpHeaderRecyclerView();
-
         }
 
         public void setPanelAdapter(PanelAdapter panelAdapter) {
@@ -231,13 +241,23 @@ public class ScrollablePanel extends FrameLayout {
                 RecyclerView.ViewHolder viewHolder = panelAdapter.onCreateViewHolder(holder.firstColumnItemView, panelAdapter.getItemViewType(position + 1, 0));
                 holder.firstColumnItemVH = viewHolder;
                 panelAdapter.onBindViewHolder(holder.firstColumnItemVH, position + 1, 0);
+                updateLine(holder.recyclerView, position);
                 holder.firstColumnItemView.addView(viewHolder.itemView);
             } else {
                 panelAdapter.onBindViewHolder(holder.firstColumnItemVH, position + 1, 0);
+                updateLine(holder.recyclerView, position);
             }
 
             LinearLayoutManager layoutManager = (LinearLayoutManager) holder.recyclerView.getLayoutManager();
             layoutManager.scrollToPositionWithOffset(firstPos, firstOffset);
+        }
+
+        public void updateLine(RecyclerView recyclerView, int row) {
+            if (panelAdapter.isEmptyRow(row + 1)) {
+                recyclerView.setBackgroundResource(R.drawable.dotted_line);
+            } else {
+                recyclerView.setBackgroundResource(R.drawable.solid_line);
+            }
         }
 
 
@@ -249,19 +269,26 @@ public class ScrollablePanel extends FrameLayout {
 
         private void setUpHeaderRecyclerView() {
             if (panelAdapter != null) {
-                if (headerRecyclerView.getAdapter() == null) {
+                if (headerRecyclerView.getAdapter() == null || verticalLinesRecyclerView.getAdapter() == null) {
                     PanelLineItemAdapter lineItemAdapter = new PanelLineItemAdapter(0, panelAdapter);
                     headerRecyclerView.setAdapter(lineItemAdapter);
+                    VerticalLineAdapter verticalLineAdapter = new VerticalLineAdapter(panelAdapter);
+                    verticalLinesRecyclerView.setAdapter(verticalLineAdapter);
+
                 } else {
                     headerRecyclerView.getAdapter().notifyDataSetChanged();
+                    verticalLinesRecyclerView.getAdapter().notifyDataSetChanged();
                 }
                 LinearLayoutManager layoutManager = (LinearLayoutManager) headerRecyclerView.getLayoutManager();
                 layoutManager.scrollToPositionWithOffset(firstPos, firstOffset);
+                LinearLayoutManager linesLayoutManager = (LinearLayoutManager) verticalLinesRecyclerView.getLayoutManager();
+                linesLayoutManager.scrollToPositionWithOffset(firstPos, firstOffset);
             }
         }
 
         public void initRecyclerView(RecyclerView recyclerView) {
             recyclerView.setHasFixedSize(true);
+            recyclerView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
             observerList.add(recyclerView);
             recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
                 @Override
