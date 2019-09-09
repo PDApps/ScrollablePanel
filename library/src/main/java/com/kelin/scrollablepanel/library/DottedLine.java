@@ -100,4 +100,9 @@ public class DottedLine extends View {
     public void setDotted(boolean dotted) {
         isDotted = dotted;
     }
+
+    public void setColor(int color) {
+        mDashedPaint.setColor(color);
+        mSolidPaint.setColor(color);
+    }
 }

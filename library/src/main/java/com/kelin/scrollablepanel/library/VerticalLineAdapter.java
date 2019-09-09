@@ -32,7 +32,9 @@ public class VerticalLineAdapter extends RecyclerView.Adapter<VerticalLineAdapte
         DottedLine dottedLine = (DottedLine) holder.itemView;
         dottedLine.setLayoutParams(new FrameLayout.LayoutParams(panelAdapter.getWidthOfColumn(), FrameLayout.LayoutParams.MATCH_PARENT));
         boolean isDotted = panelAdapter.isEmptyColumn(position + 1);
+        int color = panelAdapter.getColumnColor(position + 1);
         dottedLine.setDotted(isDotted);
+        dottedLine.setColor(color);
     }
 
     @Override
