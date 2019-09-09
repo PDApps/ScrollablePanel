@@ -1,12 +1,16 @@
 package com.kelin.scrollablepanel.library;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
+import androidx.appcompat.content.res.AppCompatResources;
+import androidx.core.graphics.drawable.DrawableCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -253,11 +257,16 @@ public class ScrollablePanel extends FrameLayout {
         }
 
         public void updateLine(RecyclerView recyclerView, int row) {
+            int resId = 0;
             if (panelAdapter.isEmptyRow(row + 1)) {
-                recyclerView.setBackgroundResource(R.drawable.dotted_line);
+                resId = R.drawable.dotted_line;
             } else {
-                recyclerView.setBackgroundResource(R.drawable.solid_line);
+                resId = R.drawable.solid_line;
             }
+            Drawable unwrappedDrawable = AppCompatResources.getDrawable(recyclerView.getContext(), resId);
+            Drawable wrappedDrawable = DrawableCompat.wrap(unwrappedDrawable);
+            DrawableCompat.setTint(wrappedDrawable, panelAdapter.getRowColor(row + 1));
+            recyclerView.setBackground(wrappedDrawable);
         }
 
 
