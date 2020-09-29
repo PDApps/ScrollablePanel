@@ -62,9 +62,11 @@ public abstract class PanelAdapter {
 
     public abstract int getWidthOfFirstHeader();
 
-    public abstract int getColumnColor(int column);
+    public abstract int getColumnLineColor(int column);
 
     public abstract int getRowColor(int row);
+
+    public abstract boolean isBoldLine(int column);
 
     /**
      * see {@link RecyclerView.Adapter#onBindViewHolder(RecyclerView.ViewHolder, int)}  }

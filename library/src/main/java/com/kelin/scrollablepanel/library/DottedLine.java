@@ -31,9 +31,12 @@ import static android.os.Build.VERSION_CODES;
 public class DottedLine extends View {
 
     private boolean isDotted = false;
+    private boolean isBold = false;
 
     private Paint mDashedPaint;
     private Paint mSolidPaint;
+    private float normalLineWidth;
+    private float boldLineWidth;
 
     public DottedLine(Context context) {
         super(context);
@@ -59,9 +62,9 @@ public class DottedLine extends View {
     private void init() {
         Resources res = getResources();
         int lineColor = getLineColor();
-        float lineWidth = res.getDimension(R.dimen.line_width);
+        normalLineWidth = res.getDimension(R.dimen.line_width);
+        boldLineWidth = res.getDimension(R.dimen.bold_line_width);
         mDashedPaint = new Paint();
-        mDashedPaint.setStrokeWidth(lineWidth);
         float dashLength = res.getDimension(R.dimen.dash_length);
         mDashedPaint.setPathEffect(new DashPathEffect(new float[]{dashLength, dashLength}, 0));
         mDashedPaint.setColor(lineColor);
@@ -72,7 +75,6 @@ public class DottedLine extends View {
         }
 
         mSolidPaint = new Paint();
-        mSolidPaint.setStrokeWidth(lineWidth);
         mSolidPaint.setColor(lineColor);
     }
 
@@ -94,6 +96,11 @@ public class DottedLine extends View {
         } else {
             paint = mSolidPaint;
         }
+        float lineWidth = normalLineWidth;
+        if (isBold) {
+            lineWidth = boldLineWidth;
+        }
+        paint.setStrokeWidth(lineWidth);
         canvas.drawLine(getWidth() / 2f, 0, getWidth() / 2f, getHeight(), paint);
     }
 
@@ -104,5 +111,9 @@ public class DottedLine extends View {
     public void setColor(int color) {
         mDashedPaint.setColor(color);
         mSolidPaint.setColor(color);
+    }
+
+    public void setIsBold(boolean isBold) {
+        this.isBold = isBold;
     }
 }

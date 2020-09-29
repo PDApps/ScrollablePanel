@@ -5,7 +5,6 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
 import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
@@ -32,9 +31,10 @@ public class VerticalLineAdapter extends RecyclerView.Adapter<VerticalLineAdapte
         DottedLine dottedLine = (DottedLine) holder.itemView;
         dottedLine.setLayoutParams(new FrameLayout.LayoutParams(panelAdapter.getWidthOfColumn(), FrameLayout.LayoutParams.MATCH_PARENT));
         boolean isDotted = panelAdapter.isEmptyColumn(position + 1);
-        int color = panelAdapter.getColumnColor(position + 1);
+        int lineColor = panelAdapter.getColumnLineColor(position + 1);
         dottedLine.setDotted(isDotted);
-        dottedLine.setColor(color);
+        dottedLine.setColor(lineColor);
+        dottedLine.setIsBold(panelAdapter.isBoldLine(position + 1));
     }
 
     @Override
