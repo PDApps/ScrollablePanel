@@ -101,7 +101,8 @@ public class DottedLine extends View {
             lineWidth = boldLineWidth;
         }
         paint.setStrokeWidth(lineWidth);
-        canvas.drawLine(getWidth() / 2f, 0, getWidth() / 2f, getHeight(), paint);
+        float lineXCoordinate = getWidth() / 2f;
+        canvas.drawLine(lineXCoordinate, 0, lineXCoordinate, getHeight(), paint);
     }
 
     public void setDotted(boolean dotted) {
